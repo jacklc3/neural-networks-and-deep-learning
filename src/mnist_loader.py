@@ -80,6 +80,9 @@ def vectorized_result(j):
     position and zeroes elsewhere.  This is used to convert a digit
     (0...9) into a corresponding desired output from the neural
     network."""
-    e = np.zeros((10, 1))
-    e[j] = 1.0
+    e = np.zeros((4, 1))
+    for k in xrange(3, -1, -1):
+        if j % 2 == 1:
+            e[k] = 1.0
+        j = j // 2
     return e

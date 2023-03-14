@@ -122,14 +122,14 @@ class Network(object):
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        test_results = [(np.argmax(self.feedforward(x)), y)
+        test_results = [(round(np.sum(self.feedforward(x) * np.array([8,4,2,1]).reshape((4,1)))), y)
                         for (x, y) in test_data]
         return sum(int(x == y) for (x, y) in test_results)
 
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
-        return (output_activations-y)
+        return (output_activations-y) * np.array([8,4,2,1]).reshape((4,1))
 
 #### Miscellaneous functions
 def sigmoid(z):
