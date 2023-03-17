@@ -140,8 +140,6 @@ class Network(object):
         return a
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
-            no_improvment_threshold=None,
-            eta_reduction_threshold=None,
             lmbda = 0.0,
             evaluation_data=None,
             monitor_evaluation_cost=False,
@@ -171,9 +169,6 @@ class Network(object):
         n = len(training_data)
         evaluation_cost, evaluation_accuracy = [], []
         training_cost, training_accuracy = [], []
-        best_evaluation_accuracy = 0
-        no_improvment_count = 0
-        eta_reduction_count = 0
         for j in xrange(epochs):
             random.shuffle(training_data)
             mini_batches = [
@@ -201,26 +196,6 @@ class Network(object):
                 evaluation_accuracy.append(accuracy)
                 print "Accuracy on evaluation data: {} / {}".format(
                     self.accuracy(evaluation_data), n_data)
-            if no_improvment_threshold is not None:
-                eval_accuracy = self.accuracy(evaluation_data)
-                if eval_accuracy > best_evaluation_accuracy:
-                    no_improvment_count = 0
-                    best_evaluation_accuracy = eval_accuracy
-                else:
-                    no_improvment_count += 1
-                print "No improvment counter: {} / {}".format(
-                    no_improvment_count, no_improvment_threshold)
-                if no_improvment_count == no_improvment_threshold:
-                    if eta_reduction_threshold is None:
-                        break
-                    if eta_reduction_count == eta_reduction_threshold:
-                        print "Eta reduction limit reached"
-                        break
-                    eta = eta / 2.0
-                    eta_reduction_count += 1
-                    no_improvment_count = 0
-                    print "Eta halved to {}, this is reduction {} / {}".format(
-                        eta, eta_reduction_count, eta_reduction_threshold)
             print
         return evaluation_cost, evaluation_accuracy, \
             training_cost, training_accuracy
